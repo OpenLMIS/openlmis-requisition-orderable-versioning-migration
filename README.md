@@ -55,4 +55,4 @@ JIRA Ticket: [OLMIS-6413](https://openlmis.atlassian.net/browse/OLMIS-6413)
 
 ## Error reporting
 
-If the script is run twice, it should not corrupt the data, since it does not modify the schema - we only set orderable versionId field in requisition line items. Any additional data that was added in the meantime will be migrated.
+If the script is run twice, it should not corrupt the data, since it does not modify the schema - we only set orderable versionNumber field in requisition line items. Any additional data that was added in the meantime will be migrated.
