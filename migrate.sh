@@ -27,5 +27,20 @@ while IFS=, read -r  approvedProductId approvedProductVersionNumber approvedProd
   echo "UPDATE requisition.available_products SET facilityTypeApprovedProductId='${approvedProductId}', facilityTypeApprovedProductVersionNumber = '${approvedProductVersionNumber}' WHERE orderableId = '${approvedProductOrderableId}' ;" >> migration.sql
 done < facility_type_approved_products.csv
 
+echo "Add steps to update orderable details in order line items (the fulfillment database)"
+while IFS=, read -r orderableId orderableVersionNumber; do
+  echo "UPDATE fulfillment.order_line_items SET orderableVersionNumber = '${orderableVersionNumber}' WHERE orderableId = '${orderableId}';" >> migration.sql
+done < orderables.csv
+
+echo "Add steps to update orderable details in shipment line items (the fulfillment database)"
+while IFS=, read -r orderableId orderableVersionNumber; do
+  echo "UPDATE fulfillment.shipment_line_items SET orderableVersionNumber = '${orderableVersionNumber}' WHERE orderableId = '${orderableId}';" >> migration.sql
+done < orderables.csv
+
+echo "Add steps to update orderable details in proof of delivery line items (the fulfillment database)"
+while IFS=, read -r orderableId orderableVersionNumber; do
+  echo "UPDATE fulfillment.proof_of_delivery_line_items SET orderableVersionNumber = '${orderableVersionNumber}' WHERE orderableId = '${orderableId}';" >> migration.sql
+done < orderables.csv
+
 echo "Apply migration (the requisition database)"
 ${PSQL} < migration.sql
