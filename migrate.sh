@@ -44,3 +44,5 @@ done < orderables.csv
 
 echo "Apply migration (the requisition database)"
 ${PSQL} < migration.sql
+
+echo "Migration finished!"
