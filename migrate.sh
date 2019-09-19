@@ -6,7 +6,7 @@ if [ -f migration.sql ]; then
   rm migration.sql
 fi
 
-PSQL="psql --single-transaction --set AUTOCOMMIT=off --set ON_ERROR_STOP=on --no-align -t --field-separator , --quiet"
+PSQL="psql --single-transaction --set AUTOCOMMIT=off --set ON_ERROR_STOP=on --no-align -t --field-separator ,"
 
 echo "Read the latest orderables (the reference data database)"
 ${PSQL} -c "SELECT id AS orderableId, MAX(versionNumber) AS orderableVersionNumber FROM referencedata.orderables GROUP BY id" > orderables.csv
