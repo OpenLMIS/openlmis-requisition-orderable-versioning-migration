@@ -16,6 +16,14 @@ ${PSQL} -c "SELECT id AS approvedProductId, MAX(versionNumber) AS approvedProduc
 
 echo "Create migration file"
 echo "Add steps to update orderable details in requisition line items (the requisition database)"
+
+echo "Add indexes on orderableId"
+echo "CREATE INDEX requisition_line_items_orderableId_idx ON requisition.requisition_line_items (orderableId);" >> migration.sql
+echo "CREATE INDEX available_products_orderableId_idx ON requisition.available_products (orderableId);" >> migration.sql
+echo "CREATE INDEX order_line_items_orderableId_idx ON fulfillment.order_line_items (orderableId);" >> migration.sql
+echo "CREATE INDEX shipment_line_items_orderableId_idx ON fulfillment.shipment_line_items (orderableId);" >> migration.sql
+echo "CREATE INDEX proof_of_delivery_line_items_orderableId_idx ON fulfillment.proof_of_delivery_line_items (orderableId);" >> migration.sql
+
 while IFS=, read -r orderableId orderableVersionNumber; do
   echo "UPDATE requisition.requisition_line_items SET orderableVersionNumber='${orderableVersionNumber}' WHERE orderableId = '${orderableId}';" >> migration.sql
   echo "UPDATE requisition.available_products SET orderableVersionNumber='${orderableVersionNumber}' WHERE orderableId = '${orderableId}' ;" >> migration.sql
@@ -41,6 +49,13 @@ echo "Add steps to update orderable details in proof of delivery line items (the
 while IFS=, read -r orderableId orderableVersionNumber; do
   echo "UPDATE fulfillment.proof_of_delivery_line_items SET orderableVersionNumber = '${orderableVersionNumber}' WHERE orderableId = '${orderableId}';" >> migration.sql
 done < orderables.csv
+
+echo "Remove indexes on orderableId"
+echo "DROP INDEX requisition.requisition_line_items_orderableId_idx;" >> migration.sql
+echo "DROP INDEX requisition.available_products_orderableId_idx;" >> migration.sql
+echo "DROP INDEX fulfillment.order_line_items_orderableId_idx;" >> migration.sql
+echo "DROP INDEX fulfillment.shipment_line_items_orderableId_idx;" >> migration.sql
+echo "DROP INDEX fulfillment.proof_of_delivery_line_items_orderableId_idx;" >> migration.sql
 
 echo "Apply migration (the requisition database)"
 ${PSQL} < migration.sql
