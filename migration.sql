@@ -26,7 +26,8 @@ CREATE TABLE requisition.requisition_line_items_new AS
          rli.totalconsumedquantity, rli.totalcost, rli.totallossesandadjustments, rli.totalreceivedquantity,
          rli.totalstockoutdays, rli.requisitionid, rli.idealstockamount, rli.calculatedorderquantityisa,
          rli.additionalquantityrequired, o.versionNumber AS orderableversionnumber,
-         ftap.id AS facilitytypeapprovedproductid, 1 as facilitytypeapprovedproductversionnumber
+         ftap.id AS facilitytypeapprovedproductid,
+         CAST(1 AS bigint) AS facilitytypeapprovedproductversionnumber
   FROM requisition.requisition_line_items AS rli
     INNER JOIN requisition.requisitions AS r ON rli.requisitionid = r.id
     INNER JOIN (SELECT id, MAX(versionNumber) as versionNumber FROM referencedata.orderables GROUP BY id) AS o ON rli.orderableId = o.id
@@ -73,7 +74,8 @@ REFERENCES requisition.requisition_line_items (id) MATCH SIMPLE
 CREATE TABLE requisition.available_products_new AS
   SELECT ap.requisitionid,
          ap.orderableid, o.versionNumber AS orderableversionnumber,
-         ftap.id AS facilitytypeapprovedproductid, 1 AS facilitytypeapprovedproductversionnumber
+         ftap.id AS facilitytypeapprovedproductid,
+         CAST(1 AS bigint) AS facilitytypeapprovedproductversionnumber
   FROM requisition.available_products AS ap
     INNER JOIN requisition.requisitions AS r ON ap.requisitionid = r.id
     INNER JOIN (SELECT id, MAX(versionNumber) as versionNumber FROM referencedata.orderables GROUP BY id) AS o ON ap.orderableId = o.id
