@@ -52,6 +52,10 @@ ADD CONSTRAINT fk_4sg1naierwgt9avsjcm76a2yl FOREIGN KEY (requisitionid)
 REFERENCES requisition.requisitions (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION;
 
+-- recreates indexes
+CREATE INDEX requisition_line_items_requisitionid_idx
+  ON requisition.requisition_line_items_new USING btree (requisitionid);
+
 -- renames the new table
 ALTER TABLE requisition.requisition_line_items_new RENAME TO requisition_line_items;
 
@@ -95,6 +99,10 @@ ADD CONSTRAINT fk_b8078votirpsmh2cpuvm0oull FOREIGN KEY (requisitionid)
 REFERENCES requisition.requisitions (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION;
 
+-- recreates indexes
+CREATE INDEX available_non_full_supply_products_requisitionid_idx
+  ON requisition.available_products_new USING btree (requisitionid);
+
 -- renames the new table
 ALTER TABLE requisition.available_products_new RENAME TO available_products;
 
@@ -121,6 +129,10 @@ ADD CONSTRAINT order_line_items_pkey PRIMARY KEY (id),
 ADD CONSTRAINT order_line_items_orderid_fk FOREIGN KEY (orderid)
 REFERENCES fulfillment.orders (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+-- recreates indexes
+CREATE INDEX order_line_items_orderid_idx
+  ON fulfillment.order_line_items_new USING btree (orderid);
 
 -- renames the new table
 ALTER TABLE fulfillment.order_line_items_new RENAME TO order_line_items;
@@ -149,6 +161,10 @@ ADD CONSTRAINT shipment_line_items_shipmentid_fk FOREIGN KEY (shipmentid)
 REFERENCES fulfillment.shipments (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION;
 
+-- recreates indexes
+CREATE INDEX shipment_line_items_shipmentid_idx
+  ON fulfillment.shipment_line_items_new USING btree (shipmentid);
+
 -- renames the new table
 ALTER TABLE fulfillment.shipment_line_items_new RENAME TO shipment_line_items;
 
@@ -176,6 +192,10 @@ ADD CONSTRAINT proof_of_delivery_line_items_pkey PRIMARY KEY (id),
 ADD CONSTRAINT proof_of_delivery_line_items_proofofdeliveryid_fk FOREIGN KEY (proofofdeliveryid)
 REFERENCES fulfillment.proofs_of_delivery (id) MATCH SIMPLE
   ON UPDATE NO ACTION ON DELETE NO ACTION;
+
+-- recreates indexes
+CREATE INDEX proof_of_delivery_line_items_proofofdeliveryid_idx
+  ON fulfillment.proof_of_delivery_line_items_new USING btree (proofofdeliveryid);
 
 -- rename the new table
 ALTER TABLE fulfillment.proof_of_delivery_line_items_new RENAME TO proof_of_delivery_line_items;
